@@ -5,5 +5,5 @@ from workout_api.contrib.schemas import BaseSchema
 
 
 class Categoria(BaseSchema):
-    nome: Annotated[str, Field(description="Nome da categoria", examples='Musculação', max_length=10)]
-    descricao: Annotated[str, Field(description="Descrição da categoria", examples='Treinos de musculação', max_length=255)]
+    nome: Annotated[str, Field(description="Nome da categoria", example='Musculação', max_length=10)]
+    descricao: Annotated[str, Field(description="Descrição da categoria", example='Treinos de musculação', max_length=255)]
