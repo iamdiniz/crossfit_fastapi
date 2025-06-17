@@ -5,6 +5,7 @@ from workout_api.categorias.models import CategoriaModel
 from workout_api.categorias.schemas import CategoriaIn, CategoriaOut
 from workout_api.contrib.dependencies import DatabaseDependency
 from sqlalchemy.future import select
+from fastapi import HTTPException
 
 router = APIRouter()
 
@@ -46,5 +47,11 @@ async def get(db_session: DatabaseDependency) -> list[CategoriaOut]:
 async def get_by_id(id: UUID4, db_session: DatabaseDependency) -> CategoriaOut:
     categoria: CategoriaOut = (
         await db_session.execute(select(CategoriaModel).filter_by(id=id))).scalars().first()
+
+    if not categoria:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f'Categoria não encontrada no id: {id}'
+        )
 
     return categoria
