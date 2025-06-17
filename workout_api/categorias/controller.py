@@ -15,10 +15,10 @@ router = APIRouter()
     status_code=status.HTTP_201_CREATED,
     response_model=CategoriaOut,
 )
-async def post(db_session: DatabaseDependency,
-               categoria_in: CategoriaIn = Body(...)
+async def post(
+    db_session: DatabaseDependency,
+    categoria_in: CategoriaIn = Body(...)
 ) -> CategoriaOut:
-
     categoria_out = CategoriaOut(id=uuid4(), **categoria_in.model_dump())
     categoria_model = CategoriaModel(**categoria_out.model_dump())
     
@@ -27,13 +27,14 @@ async def post(db_session: DatabaseDependency,
     
     return categoria_out
 
+
 @router.get(
     '/',
     summary='Listar todas as categorias',
     status_code=status.HTTP_200_OK,
     response_model=list[CategoriaOut],
 )
-async def get(db_session: DatabaseDependency) -> list[CategoriaOut]:
+async def query(db_session: DatabaseDependency) -> list[CategoriaOut]:
     categorias: list[CategoriaOut] = (await db_session.execute(select(CategoriaModel))).scalars().all()
 
     return categorias

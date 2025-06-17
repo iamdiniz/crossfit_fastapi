@@ -33,10 +33,10 @@ async def post(db_session: DatabaseDependency,
     status_code=status.HTTP_200_OK,
     response_model=list[CentroTreinamentoOut],
 )
-async def get(db_session: DatabaseDependency) -> list[CentroTreinamentoOut]:
-    centros_treinamento: list[CentroTreinamentoOut] = (await db_session.execute(select(CentroTreinamentoModel))).scalars().all()
+async def query(db_session: DatabaseDependency) -> list[CentroTreinamentoOut]:
+    centros_treinamento_out: list[CentroTreinamentoOut] = (await db_session.execute(select(CentroTreinamentoModel))).scalars().all()
 
-    return centros_treinamento
+    return centros_treinamento_out
 
 @router.get(
     '/{id}',
@@ -45,13 +45,13 @@ async def get(db_session: DatabaseDependency) -> list[CentroTreinamentoOut]:
     response_model=CentroTreinamentoOut,
 )
 async def get_by_id(id: UUID4, db_session: DatabaseDependency) -> CentroTreinamentoOut:
-    centro_treinamento: CentroTreinamentoOut = (
+    centros_treinamento_out: CentroTreinamentoOut = (
         await db_session.execute(select(CentroTreinamentoModel).filter_by(id=id))).scalars().first()
 
-    if not centro_treinamento:
+    if not centros_treinamento_out:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f'Centro de treinamento não encontrado no id: {id}'
         )
 
-    return centro_treinamento
+    return centros_treinamento_out
