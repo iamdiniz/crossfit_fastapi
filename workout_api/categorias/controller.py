@@ -3,6 +3,7 @@ from fastapi import APIRouter, Body, status
 from workout_api.categorias.models import CategoriaModel
 from workout_api.categorias.schemas import CategoriaIn, CategoriaOut
 from workout_api.contrib.dependencies import DatabaseDependency
+from sqlalchemy.future import select
 
 router = APIRouter()
 
@@ -23,3 +24,14 @@ async def post(db_session: DatabaseDependency,
     await db_session.commit()
     
     return categoria_out
+
+@router.get(
+    '/',
+    summary='Listar todas as categorias',
+    status_code=status.HTTP_200_OK,
+    response_model=list[CategoriaOut],
+)
+async def get(db_session: DatabaseDependency) -> list[CategoriaOut]:
+    categorias: list[CategoriaOut] = (await db_session.execute(select(CategoriaModel))).scalars().all()
+
+    return categorias
